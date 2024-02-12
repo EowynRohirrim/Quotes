@@ -3,15 +3,17 @@ package com.patri.room_database.domain
 import com.patri.room_database.data.QuoteRepository
 import com.patri.room_database.data.model.QuoteModel
 import com.patri.room_database.data.model.QuoteProvider
+import com.patri.room_database.domain.model.Quote
 import javax.inject.Inject
 
-class GetRandomQuoteUseCase @Inject constructor(private val repository:QuoteRepository,    private val quoteProvider: QuoteProvider ) {
+/**Declara como inyectable*/
+class GetRandomQuoteUseCase @Inject constructor(private val repository:QuoteRepository) {
 
 
     //Ahora no necesita una corrutina porque lo tenemos almacenado en QuoteProvider
-    operator fun invoke(): QuoteModel? {//Va a coger un QuoteModel
+    suspend operator fun invoke(): Quote? {//Va a coger un QuoteModel
 
-        val quotes = quoteProvider.quotes//almacenamos el listado de citas
+        val quotes = repository.getAllQuotesFromDatabase() //pasando por repositorio coger todas las citas de la base de datos
 
         if (!quotes.isNullOrEmpty()) {//Si el listado no es nulo
             val randomNumber = (quotes.indices).random()
